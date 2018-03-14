@@ -74,6 +74,13 @@ let secondCard = 0;
 let isEqual = 0;
 let movesNum = 0;
 let moves = document.querySelector('.moves');
+class CardPair {
+  constructor (firstCard, secondCard) {
+    this.firstCard = firstCard;
+    this.secondCard = secondCard;
+  }
+}
+let cardPairs = [];
 
 function showCard(cardSpot) {
   movesNum++;
@@ -85,17 +92,18 @@ function showCard(cardSpot) {
   } //keep the card as firstCard if there is no card open yet
   if (firstCard !== 0 && secondCard === 0) {
     secondCard = cardSpot;
+    const cardPair = new CardPair (firstCard, secondCard);
+    cardPairs.push(cardPair);
     secondCard.classList.add('show');
     checkEquality(firstCard, secondCard);
+    firstCard = 0; secondCard = 0;
     setTimeout(function() {
-      if (!isEqual) { secondCard.classList.remove('show'); firstCard.classList.remove('show');
-      firstCard = 0; secondCard = 0;
+      if (!isEqual) { cardPairs[cardPairs.length-1].secondCard.classList.remove('show'); cardPairs[cardPairs.length-1].firstCard.classList.remove('show');
       }
       },  1600);
   }
   function checkEquality(first, second) {
     isEqual = ( first.dataset.symbol === second.dataset.symbol ) ? true : 0;
-    if (isEqual) {firstCard = 0; secondCard = 0;}
   }
 };
 
@@ -104,5 +112,5 @@ deck.onclick = function(event) {
   let target = event.target;
   let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
   if (!ccSpot) return; //if clicked somewhere else inside deck do nothing
-  showCard(ccSpot);
+  showCard(ccSpot); //send clicked card spot to showCard
 }
