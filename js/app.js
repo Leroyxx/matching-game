@@ -83,17 +83,31 @@ class CardPair {
 let cardPairs = [];
 
 function showCard(cardSpot) {
-  movesNum++;
-  moves.textContent = movesNum;
+  function increaseMoves() {
+    movesNum++;
+    moves.textContent = movesNum;
+  }
+  function createPair(firstCard, secondCard) {
+    const cardPair = new CardPair (firstCard, secondCard);
+    cardPairs.push(cardPair);
+  }
   if (firstCard === 0) {
     firstCard = cardSpot;
     firstCard.classList.add('show');
+    increaseMoves();
     return false;
   } //keep the card as firstCard if there is no card open yet
   if (firstCard !== 0 && secondCard === 0) {
     secondCard = cardSpot;
-    const cardPair = new CardPair (firstCard, secondCard);
-    cardPairs.push(cardPair);
+    if (secondCard === firstCard) {
+      firstCard.classList.remove('show');
+      createPair(firstCard, 0);
+      firstCard = 0;
+      secondCard = 0;
+      return false;
+    }
+    increaseMoves();
+    createPair(firstCard, secondCard);
     secondCard.classList.add('show');
     checkEquality(firstCard, secondCard);
     firstCard = 0; secondCard = 0;
