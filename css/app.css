@@ -109,3 +109,17 @@ h1 {
     float: right;
     cursor: pointer;
 }
+
+.winContainer {
+  position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -46%);
+    color: grey;
+    background-color: white;
+    padding-left: 30px;
+    padding-right: 90px;
+    padding-top: 30px;
+    border-radius: 10px;
+    padding-bottom: 20px;
+}

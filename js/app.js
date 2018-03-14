@@ -81,7 +81,7 @@ class CardPair {
   }
 }
 let cardPairs = [];
-
+let pairsMade = 0;
 function showCard(cardSpot) {
   function increaseMoves() {
     movesNum++;
@@ -99,7 +99,7 @@ function showCard(cardSpot) {
   } //keep the card as firstCard if there is no card open yet
   if (firstCard !== 0 && secondCard === 0) {
     secondCard = cardSpot;
-    if (secondCard === firstCard) {
+    if (secondCard === firstCard) { //if it's the exact same card
       firstCard.classList.remove('show');
       createPair(firstCard, 0);
       firstCard = 0;
@@ -111,10 +111,23 @@ function showCard(cardSpot) {
     secondCard.classList.add('show');
     checkEquality(firstCard, secondCard);
     firstCard = 0; secondCard = 0;
-    setTimeout(function() {
-      if (!isEqual) { cardPairs[cardPairs.length-1].secondCard.classList.remove('show'); cardPairs[cardPairs.length-1].firstCard.classList.remove('show');
+    if (!isEqual) {
+      setTimeout(function() {
+          cardPairs[cardPairs.length-1].secondCard.classList.remove('show');
+          cardPairs[cardPairs.length-1].firstCard.classList.remove('show');
+      },  1100);
+    } else {
+      pairsMade++;
+      if (pairsMade === 8) {
+        let winScreen = document.createElement('div');
+        winScreen.className = 'winContainer';
+        winScreen.innerHTML = `<div class="win">
+                               <p> Yay! </p>
+                               <h1> You win! </h1>
+                               </div>`
+        document.querySelector('.deck').appendChild(winScreen);
       }
-      },  1600);
+    }
   }
   function checkEquality(first, second) {
     isEqual = ( first.dataset.symbol === second.dataset.symbol ) ? true : 0;
