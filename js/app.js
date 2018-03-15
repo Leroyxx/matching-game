@@ -82,10 +82,19 @@ class CardPair {
 }
 let cardPairs = [];
 let pairsMade = 0;
+let starNum = 3;
+let prevStarNum = starNum; // log the previous starNum so that we don't
+                           // touch the stars in the dom if there is no need to
+let stars =    `<li><i class="fa fa-star"></i></li>
+        		    <li><i class="fa fa-star"></i></li>
+        		    <li><i class="fa fa-star"></i></li>`;
+let starsOnDOM = document.querySelector('.stars');
+starsOnDOM.innerHTML = stars;
 function showCard(cardSpot) {
   function increaseMoves() {
     movesNum++;
     moves.textContent = movesNum;
+    setStars();
   }
   function createPair(firstCard, secondCard) {
     const cardPair = new CardPair (firstCard, secondCard);
@@ -132,6 +141,25 @@ function showCard(cardSpot) {
   function checkEquality(first, second) {
     isEqual = ( first.dataset.symbol === second.dataset.symbol ) ? true : 0;
   }
+  function setStars() {
+    if (movesNum > 22) {
+      starNum = 1;
+    }
+    else if (movesNum > 16 && movesNum <= 22) {
+      starNum = 2;
+    }
+    if (prevStarNum !== starNum) {
+    prevStarNum = starNum;
+    switch (starNum) {
+      case 2: stars = `<li><i class="fa fa-star"></i></li>
+                       <li><i class="fa fa-star"></i></li>`;
+                       break;
+      case 1: stars = `<li><i class="fa fa-star"></i></li>`;
+                       break;
+    }
+    starsOnDOM.innerHTML = stars;
+  }
+}
 };
 
 
