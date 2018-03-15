@@ -32,9 +32,10 @@ function shuffle(array) {
 
 }
 
-let shufdCardList = shuffle(cardList);
+let shufdCardList;
 
 function placeCards() {
+  shufdCardList = shuffle(cardList);
   let cardSpot = 1; //c+cardSpot is the id of the card on the DOM
   let cardOnDOM;
   const addSymbolData = card => {cardOnDOM.setAttribute("data-symbol", card)}
@@ -51,7 +52,11 @@ function placeCards() {
       case 7: cardClass = "fa-leaf"; addSymbolData(card); break;
       case 8: cardClass = "fa-anchor"; addSymbolData(card); break;
     }
-    cardOnDOM.firstElementChild.classList.add(cardClass)
+    let cardVisual = cardOnDOM.firstElementChild;
+    if (cardVisual.classList.item(1) !== null) {
+      cardVisual.setAttribute('class', 'fa');
+    }
+    cardVisual.classList.add(cardClass);
     cardSpot++;
   }
 }
@@ -69,11 +74,13 @@ placeCards();
  */
 
 let deck = document.querySelector(".deck");
+let restartBtn = document.querySelector(".restart");
 let firstCard = 0;
 let secondCard = 0;
 let isEqual = 0;
 let movesNum = 0;
 let moves = document.querySelector('.moves');
+moves.textContent = movesNum;
 class CardPair {
   constructor (firstCard, secondCard) {
     this.firstCard = firstCard;
@@ -162,10 +169,33 @@ function showCard(cardSpot) {
 }
 };
 
+function restartCards() {
+  cardPairs = [];
+  pairsMade = 0;
+  movesNum = 0;
+  moves.textContent = movesNum;
+  starNum = 3;
+  firstCard = 0;
+  prevStarNum = starNum;
+  stars =        `<li><i class="fa fa-star"></i></li>
+          		    <li><i class="fa fa-star"></i></li>
+          		    <li><i class="fa fa-star"></i></li>`;
+  starsOnDOM.innerHTML = stars;
+  let cards = document.querySelectorAll('.card');
+  for (const card of cards) {
+    if (card.classList.contains('show')) { card.classList.remove('show'); }
+  }
+  placeCards();
+}
 
 deck.onclick = function(event) {
   let target = event.target;
   let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
   if (!ccSpot) return; //if clicked somewhere else inside deck do nothing
   showCard(ccSpot); //send clicked card spot to showCard
+}
+restartBtn.onclick = function(event) {
+  event.preventDefault();
+  console.log('hi!');
+  restartCards();
 }
