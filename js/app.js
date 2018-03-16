@@ -97,6 +97,10 @@ let stars =    `<li><i class="fa fa-star"></i></li>
         		    <li><i class="fa fa-star"></i></li>`;
 let starsOnDOM = document.querySelector('.stars');
 starsOnDOM.innerHTML = stars;
+let lastPairedFirstCard;
+let lastPairedSecondCard;
+let firstCardTimeout;
+let secondCardTimeout;
 function showCard(cardSpot) {
   function increaseMoves() {
     movesNum++;
@@ -106,33 +110,42 @@ function showCard(cardSpot) {
   function createPair(firstCard, secondCard) {
     const cardPair = new CardPair (firstCard, secondCard);
     cardPairs.push(cardPair);
+    lastPairedFirstCard = cardPairs[cardPairs.length-1].firstCard;
+    lastPairedSecondCard = cardPairs[cardPairs.length-1].secondCard;
   }
   if (firstCard === 0) {
     firstCard = cardSpot;
-    firstCard.classList.add('show');
+    if (movesNum > 1) {
+    if (firstCard === lastPairedSecondCard ) {
+      clearTimeout(secondCardTimeout);
+    } else if (firstCard === lastPairedFirstCard) {
+      clearTimeout(firstCardTimeout);
+    }
+    }
+    if (!firstCard.classList.contains('show')) { firstCard.classList.add('show'); }
     increaseMoves();
     return false;
   } //keep the card as firstCard if there is no card open yet
-  if (firstCard !== 0 && secondCard === 0) {
-    secondCard = cardSpot;
-    if (secondCard === firstCard) { //if it's the exact same card
-      firstCard.classList.remove('show');
-      createPair(firstCard, 0);
-      firstCard = 0;
-      secondCard = 0;
+  if (firstCard !== 0 && secondCard === 0) { //second card has been chosen
+    if (cardSpot === firstCard) { //if it's the exact same card
       return false;
     }
+    secondCard = cardSpot;
     increaseMoves();
     createPair(firstCard, secondCard);
     secondCard.classList.add('show');
     checkEquality(firstCard, secondCard);
     firstCard = 0; secondCard = 0;
     if (!isEqual) {
-      setTimeout(function() {
-          cardPairs[cardPairs.length-1].secondCard.classList.remove('show');
-          cardPairs[cardPairs.length-1].firstCard.classList.remove('show');
+      firstCardTimeout = setTimeout(function() {
+          lastPairedFirstCard.classList.remove('show');
       },  1100);
+      secondCardTimeout = setTimeout(function() {
+          lastPairedSecondCard.classList.remove('show');
+      }, 1100)
     } else {
+      lastPairedFirstCard.classList.add('match');
+      lastPairedSecondCard.classList.add('match');
       pairsMade++;
       if (pairsMade === 8) {
         let winScreen = document.createElement('div');
@@ -184,6 +197,7 @@ function restartCards() {
   let cards = document.querySelectorAll('.card');
   for (const card of cards) {
     if (card.classList.contains('show')) { card.classList.remove('show'); }
+    if (card.classList.contains('match')) { card.classList.remove('match'); }
   }
   placeCards();
 }
@@ -191,11 +205,14 @@ function restartCards() {
 deck.onclick = function(event) {
   let target = event.target;
   let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
-  if (!ccSpot) return; //if clicked somewhere else inside deck do nothing
-  showCard(ccSpot); //send clicked card spot to showCard
+  if (ccSpot) { if ( ccSpot.classList.contains('show') === false ) {
+     showCard(ccSpot) }
+     else if (!ccSpot.classList.contains('match') && ( ccSpot === lastPairedFirstCard || ccSpot === lastPairedSecondCard ) ) {
+       showCard(ccSpot) }
+  }
+  //send clicked card spot to showCard
 }
 restartBtn.onclick = function(event) {
   event.preventDefault();
-  console.log('hi!');
   restartCards();
 }
