@@ -75,6 +75,7 @@ placeCards();
 
 let deck = document.querySelector(".deck");
 let restartBtn = document.querySelector(".restart");
+let backBtn = document.querySelector(".back");
 let firstCard = 0;
 let secondCard = 0;
 let isEqual = 0;
@@ -180,7 +181,7 @@ function showCard(cardSpot) {
     starsOnDOM.innerHTML = stars;
   }
 }
-};
+}
 
 function restartCards() {
   cardPairs = [];
@@ -202,6 +203,12 @@ function restartCards() {
   placeCards();
 }
 
+function undoCard() {
+  firstCard.classList.remove('show');
+  firstCard = 0;
+}
+
+/* EVENT LISTENERS */
 deck.onclick = function(event) {
   let target = event.target;
   let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
@@ -213,6 +220,8 @@ deck.onclick = function(event) {
   //send clicked card spot to showCard
 }
 restartBtn.onclick = function(event) {
-  event.preventDefault();
   restartCards();
+}
+backBtn.onclick = function(event) {
+  undoCard();
 }

@@ -105,8 +105,10 @@ h1 {
     display: inline-block;
 }
 
-.score-panel .restart {
+.score-panel .restart, .fa-arrow-left {
     float: right;
+    margin-top: 3px;
+    padding-right: 17px;
     cursor: pointer;
 }
 
