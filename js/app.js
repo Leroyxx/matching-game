@@ -52,7 +52,7 @@ function placeCards() {
       case 7: cardClass = "fa-leaf"; addSymbolData(card); break;
       case 8: cardClass = "fa-anchor"; addSymbolData(card); break;
     }
-    let cardVisual = cardOnDOM.firstElementChild;
+    let cardVisual = cardOnDOM.firstElementChild.lastElementChild.firstElementChild;
     if (cardVisual.classList.item(1) !== null) {
       cardVisual.setAttribute('class', 'fa');
     }
@@ -75,7 +75,7 @@ placeCards();
 
 let deck = document.querySelector(".deck");
 let restartBtn = document.querySelector(".restart");
-let backBtn = document.querySelector(".back");
+let backBtn = document.querySelector(".backbtn");
 let firstCard = 0;
 let secondCard = 0;
 let isEqual = 0;
@@ -138,15 +138,36 @@ function showCard(cardSpot) {
     checkEquality(firstCard, secondCard);
     firstCard = 0; secondCard = 0;
     if (!isEqual) {
+      lastPairedSecondCard.firstElementChild.lastElementChild.classList.add('orange');
+      lastPairedFirstCard.firstElementChild.lastElementChild.classList.add('orange');
+      lastPairedFirstCard.classList.add('open');
+      lastPairedSecondCard.classList.add('open');
+      setTimeout(function () {
+      lastPairedFirstCard.classList.add(...[ 'animated', 'wobble']);
+      lastPairedSecondCard.classList.add(...[ 'animated', 'wobble']);}, 370)
       firstCardTimeout = setTimeout(function() {
-          lastPairedFirstCard.classList.remove('show');
-      },  1100);
+        lastPairedFirstCard.classList.remove('show');
+      },  1050);
       secondCardTimeout = setTimeout(function() {
-          lastPairedSecondCard.classList.remove('show');
-      }, 1100)
+        lastPairedSecondCard.classList.remove('show');
+      }, 1050);
+      setTimeout(function() {
+        lastPairedSecondCard.classList.remove(...['open', 'animated', 'wobble']);
+        lastPairedFirstCard.classList.remove(...['open', 'animated', 'wobble']);
+      }, 1100);
+      setTimeout(function() {
+        lastPairedSecondCard.firstElementChild.lastElementChild.classList.remove('orange');
+        lastPairedFirstCard.firstElementChild.lastElementChild.classList.remove('orange');
+      }, 1250);
     } else {
-      lastPairedFirstCard.classList.add('match');
-      lastPairedSecondCard.classList.add('match');
+      setTimeout(function() {
+        lastPairedFirstCard.classList.add('match');
+        lastPairedFirstCard.classList.add(...['animated', 'rubberBand']);
+        lastPairedSecondCard.classList.add(...['animated', 'rubberBand']);
+        lastPairedSecondCard.classList.add('match');}, 270);
+      setTimeout(function() {
+        lastPairedFirstCard.classList.remove(...['animated', 'rubberBand']);
+        lastPairedSecondCard.classList.remove(...['animated', 'rubberBand']);}, 1000)
       pairsMade++;
       if (pairsMade === 8) {
         let winScreen = document.createElement('div');

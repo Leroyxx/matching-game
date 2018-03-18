@@ -37,50 +37,42 @@ h1 {
  * Styles for the deck of cards
  */
 
-.deck {
-    max-width: 660px;
-    min-height: 680px;
-    background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
-    padding: 32px;
-    border-radius: 10px;
-    box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 0 3em;
-}
+ ul.deck {
+     list-style-type: none;
+     display: flex;
+     flex-wrap: wrap;
+     text-align: center;
+     padding: 0 1vw 3vh 2vw;
+     width: 55vw;
+     min-width: 353px;
+     max-height: 98vh;
+     margin: 1vh auto 2vh;
+     border-radius: 10px;
+     justify-content: space-around;
+     font: 'Coda', cursive;
+     background: linear-gradient(160deg, #02ccba 0%, #aa7ecd 100%);
+     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.5);
+ }
 
 .deck .card {
-    height: 125px;
-    width: calc(100% * (1/4) - 1vw - 1px);
-    margin-right, margin-left: 0.4vw;
-    padding: 4vw;
-    background: #2e3d49;
-    font-size: 0;
-    color: #ffffff;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+  color: white;
+  display: inline-block;
+  width: calc( 100% * (1/4) - 4vw );
+  margin :3vh 2vw 19vh 2vw;
+  perspective: 1000px;
+  cursor: default;
+  font-size: 30px;
+  text-align: center;
 }
 
-.deck .card.open {
-    transform: rotateY(0);
+.deck .back {
     background: #02b3e4;
     cursor: default;
 }
 
-.deck .card.show {
-    font-size: 33px;
-}
-
-.deck .card.match {
-    cursor: default;
+.card.match > .innerCard > .back {
     background: #02ccba;
-    font-size: 33px;
+
 }
 
 /*
@@ -124,4 +116,68 @@ h1 {
     padding-top: 30px;
     border-radius: 10px;
     padding-bottom: 20px;
+}
+
+.back > i {
+  font-size: 38px;
+}
+
+@media screen and (min-width: 780px) {
+  .back > i {
+    font-size: 58px !important;
+    margin-top: 6.54vh;
+  }
+}
+@media screen and (max-width: 780px) {
+  .card {
+    margin: 2vh 2vw 12vh 2vw !important;
+}
+  .front, .back {
+    height: 80px !important;
+    line-height: 1.6 !important;
+  }
+  .deck {
+    padding-bottom: 2vh !important;
+  }
+  .back > i {
+    margin-top: 3vh;
+  }
+}
+
+/*CARD ANIMATION BASED ON https://codepen.io/Rufusmedia/pen/YpWGYB*/
+.card {
+  perspective: 1000px;
+}
+.card.show > .innerCard {
+  transform: rotateY(180deg);
+}
+
+.innerCard {
+  width: 100%;
+  transition: 0.4s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.orange {
+  transition-delay: 0.27s;
+  background: rgb(255, 62, 23) !important;
+}
+
+.front, .back {
+  backface-visibility: hidden;
+  position: absolute;
+	top: 0;
+	left: 0;
+  height: 19vh;
+  width: 100%;
+  border-radius: 9px;
+}
+.back {
+  background: #02b3e4;
+  transform: rotateY(180deg);
+}
+.front {
+  background-color: rgb(46, 61, 73);
+  z-index: 2;
 }
