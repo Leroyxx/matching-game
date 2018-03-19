@@ -59,8 +59,19 @@ function placeCards() {
     cardVisual.classList.add(cardClass);
     cardSpot++;
   }
+  previewCard(1);
+}
+function previewCard(cardSpot) {
+  let cardOnDOM = document.getElementById(`c${cardSpot}`);
+  setTimeout(function() {
+      cardOnDOM.classList.add('show');
+      setTimeout(function () {cardOnDOM.classList.remove('show')}, 1100);
+      if(cardSpot < 16) {previewCard(cardSpot+1)}
+      else if(cardSpot=16) {setListeners(true)}
+    }, 270);
 }
 placeCards();
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -205,6 +216,7 @@ function showCard(cardSpot) {
 }
 
 function restartCards() {
+  setListeners(false);
   cardPairs = [];
   pairsMade = 0;
   movesNum = 0;
@@ -230,19 +242,29 @@ function undoCard() {
 }
 
 /* EVENT LISTENERS */
-deck.onclick = function(event) {
-  let target = event.target;
-  let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
-  if (ccSpot) { if ( ccSpot.classList.contains('show') === false ) {
-     showCard(ccSpot) }
-     else if (!ccSpot.classList.contains('match') && ( ccSpot === lastPairedFirstCard || ccSpot === lastPairedSecondCard ) ) {
-       showCard(ccSpot) }
-  }
-  //send clicked card spot to showCard
-}
-restartBtn.onclick = function(event) {
-  restartCards();
-}
-backBtn.onclick = function(event) {
-  undoCard();
-}
+
+function setListeners(finishedPreview) {
+  if (finishedPreview) {
+    deck.onclick = function(event) {
+      let target = event.target;
+      let ccSpot = target.closest('li'); //clicked card spot, navigate up the tree to the li parent element
+      if (ccSpot) { if ( ccSpot.classList.contains('show') === false ) {
+        showCard(ccSpot) }
+        else if (!ccSpot.classList.contains('match') && ( ccSpot === lastPairedFirstCard || ccSpot === lastPairedSecondCard ) ) {
+          showCard(ccSpot) }
+        }
+        //send clicked card spot to showCard
+      }
+      restartBtn.onclick = function(event) {
+        restartCards();
+      }
+      backBtn.onclick = function(event) {
+        undoCard();
+      }
+    }
+    else {
+      deck.onclick = false;
+      restartBtn.onclick = false;
+      undoCard.onclick = false;
+    }
+};
