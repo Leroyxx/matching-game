@@ -115,7 +115,6 @@ let lastPairedSecondCard;
 let firstCardTimeout;
 let secondCardTimeout;
 function showCard(cardSpot) {
-  pairsMade = 7;
   function increaseMoves() {
     movesNum++;
     moves.textContent = movesNum;
@@ -199,7 +198,7 @@ function showCard(cardSpot) {
                                <h2> Yay! </h2>
                                <h1> You win! </h1>
                                </div>`
-        document.querySelector('.deck').appendChild(winScreen);
+        setTimeout(function() {document.querySelector('.deck').appendChild(winScreen)}, 420);
       }
     }
 
@@ -214,10 +213,13 @@ function showCard(cardSpot) {
     if (prevStarNum !== starNum) {
     prevStarNum = starNum;
     switch (starNum) {
-      case 2: stars = `<li><i class="fa fa-star"></i></li>
+      case 2: stars = `<li><i class="fa fa-star outline"></i></li>
+                       <li><i class="fa fa-star"></i></li>
                        <li><i class="fa fa-star"></i></li>`;
                        break;
-      case 1: stars = `<li><i class="fa fa-star"></i></li>`;
+      case 1: stars = `<li><i class="fa fa-star outline"></i></li>
+                       <li><i class="fa fa-star outline"></i></li>
+                       <li><i class="fa fa-star"></i></li>`;
                        break;
     }
     starsOnDOM.innerHTML = stars;
@@ -246,7 +248,7 @@ function restartCards() {
     if (card.classList.contains('show')) { card.classList.remove('show'); }
     if (card.classList.contains('match')) { card.classList.remove('match'); }
   }
-  placeCards();
+  setTimeout(function() {placeCards()}, 410);
 }
 
 function undoCard() {
