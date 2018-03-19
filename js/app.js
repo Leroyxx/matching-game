@@ -102,6 +102,7 @@ class CardPair {
 let cardPairs = [];
 let pairsMade = 0;
 let starNum = 3;
+let pairNum = 0;
 let prevStarNum = starNum; // log the previous starNum so that we don't
                            // touch the stars in the dom if there is no need to
 let stars =    `<li><i class="fa fa-star"></i></li>
@@ -114,6 +115,7 @@ let lastPairedSecondCard;
 let firstCardTimeout;
 let secondCardTimeout;
 function showCard(cardSpot) {
+  pairsMade = 7;
   function increaseMoves() {
     movesNum++;
     moves.textContent = movesNum;
@@ -146,54 +148,62 @@ function showCard(cardSpot) {
     increaseMoves();
     createPair(firstCard, secondCard);
     secondCard.classList.add('show');
-    checkEquality(firstCard, secondCard);
+    checkEquality(pairNum++);
     firstCard = 0; secondCard = 0;
-    if (!isEqual) {
-      lastPairedSecondCard.firstElementChild.lastElementChild.classList.add('orange');
-      lastPairedFirstCard.firstElementChild.lastElementChild.classList.add('orange');
-      lastPairedFirstCard.classList.add('open');
-      lastPairedSecondCard.classList.add('open');
+  }
+  function checkEquality(pairNumArg) {
+    let first = cardPairs[pairNumArg].firstCard;
+    let second = cardPairs[pairNumArg].secondCard;
+    isEqual = ( first.dataset.symbol === second.dataset.symbol ) ? true : 0;
+    workPair(pairNumArg, isEqual);
+  }
+  function workPair(pairNumArg, isEqualArg) {
+    let thisPairedFirstCard = cardPairs[pairNumArg].firstCard;
+    let thisPairedSecondCard = cardPairs[pairNumArg].secondCard;
+    if (!isEqualArg) {
+      thisPairedSecondCard.firstElementChild.lastElementChild.classList.add('orange');
+      thisPairedFirstCard.firstElementChild.lastElementChild.classList.add('orange');
+      thisPairedFirstCard.classList.add('open');
+      thisPairedSecondCard.classList.add('open');
       setTimeout(function () {
-      lastPairedFirstCard.classList.add(...[ 'animated', 'wobble']);
-      lastPairedSecondCard.classList.add(...[ 'animated', 'wobble']);}, 370)
+      thisPairedFirstCard.classList.add(...[ 'animated', 'wobble']);
+      thisPairedSecondCard.classList.add(...[ 'animated', 'wobble']);}, 370)
       firstCardTimeout = setTimeout(function() {
-        lastPairedFirstCard.classList.remove('show');
+        thisPairedFirstCard.classList.remove('show');
       },  1050);
       secondCardTimeout = setTimeout(function() {
-        lastPairedSecondCard.classList.remove('show');
+        thisPairedSecondCard.classList.remove('show');
       }, 1050);
       setTimeout(function() {
-        lastPairedSecondCard.classList.remove(...['open', 'animated', 'wobble']);
-        lastPairedFirstCard.classList.remove(...['open', 'animated', 'wobble']);
+        thisPairedSecondCard.classList.remove(...['open', 'animated', 'wobble']);
+        thisPairedFirstCard.classList.remove(...['open', 'animated', 'wobble']);
       }, 1100);
       setTimeout(function() {
-        lastPairedSecondCard.firstElementChild.lastElementChild.classList.remove('orange');
-        lastPairedFirstCard.firstElementChild.lastElementChild.classList.remove('orange');
+        thisPairedSecondCard.firstElementChild.lastElementChild.classList.remove('orange');
+        thisPairedFirstCard.firstElementChild.lastElementChild.classList.remove('orange');
       }, 1250);
     } else {
       setTimeout(function() {
-        lastPairedFirstCard.classList.add('match');
-        lastPairedFirstCard.classList.add(...['animated', 'rubberBand']);
-        lastPairedSecondCard.classList.add(...['animated', 'rubberBand']);
-        lastPairedSecondCard.classList.add('match');}, 270);
+        thisPairedFirstCard.classList.add('match');
+        thisPairedFirstCard.classList.add(...['animated', 'rubberBand']);
+        thisPairedSecondCard.classList.add(...['animated', 'rubberBand']);
+        thisPairedSecondCard.classList.add('match');}, 270);
       setTimeout(function() {
-        lastPairedFirstCard.classList.remove(...['animated', 'rubberBand']);
-        lastPairedSecondCard.classList.remove(...['animated', 'rubberBand']);}, 1000)
+        thisPairedFirstCard.classList.remove(...['animated', 'rubberBand']);
+        thisPairedSecondCard.classList.remove(...['animated', 'rubberBand']);}, 1000)
       pairsMade++;
       if (pairsMade === 8) {
         let winScreen = document.createElement('div');
         winScreen.className = 'winContainer';
         winScreen.innerHTML = `<div class="win">
-                               <p> Yay! </p>
+                               <h2> Yay! </h2>
                                <h1> You win! </h1>
                                </div>`
         document.querySelector('.deck').appendChild(winScreen);
       }
     }
-  }
-  function checkEquality(first, second) {
-    isEqual = ( first.dataset.symbol === second.dataset.symbol ) ? true : 0;
-  }
+
+  } //working with the pair means showing/hiding it according to its pairNum
   function setStars() {
     if (movesNum > 22) {
       starNum = 1;
@@ -216,9 +226,12 @@ function showCard(cardSpot) {
 }
 
 function restartCards() {
+  if (document.querySelector('.winContainer')) {
+  document.querySelector('.winContainer').outerHTML = ' ' }
   setListeners(false);
   cardPairs = [];
   pairsMade = 0;
+  pairNum = 0;
   movesNum = 0;
   moves.textContent = movesNum;
   starNum = 3;
