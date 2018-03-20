@@ -180,3 +180,6 @@ html {
      -webkit-text-stroke-width: 1px;
      -webkit-text-stroke-color: black;
 }
+.timer {
+  margin-left: 6px;
+}

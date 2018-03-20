@@ -104,6 +104,35 @@ function previewCard(cardSpot) {
 }
 placeCards();
 
+let counter;
+function setTimer(countTime) {
+
+  if (countTime) {
+    const minutesLabel = document.getElementById("minutes");
+    const secondsLabel = document.getElementById("seconds");
+    let totalSeconds = 0;
+    counter = setInterval(setTime, 1000);
+
+    function setTime() {
+        ++totalSeconds;
+        secondsLabel.innerHTML = pad(totalSeconds % 60);
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+    }
+
+    function pad(val) {
+        var valString = val + "";
+        if (valString.length < 2) {
+            return "0" + valString;
+        } else {
+            return valString;
+        }
+    }
+  }
+  else {
+    clearInterval(counter); // stop counter
+  }
+}
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -168,6 +197,9 @@ function showCard(cardSpot) {
             } else if (firstCard === lastPairedFirstCard) {
                 clearTimeout(firstCardTimeout);
             }
+        }
+        else if (movesNum === 0) {
+          setTimer(true);
         }
         if (!firstCard.classList.contains('show')) {
             firstCard.classList.add('show');
@@ -234,6 +266,7 @@ function showCard(cardSpot) {
             }, 1000)
             pairsMade++;
             if (pairsMade === 8) {
+                setTimer(false);
                 let winScreen = document.createElement('div');
                 winScreen.className = 'winContainer';
                 winScreen.innerHTML = `<div class="win">
