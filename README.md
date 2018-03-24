@@ -3,18 +3,17 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Acknowledgments](#acknowledgments)
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+Memory Card Game will run on your favourite browser if you view `index.html`.
 
-To get started, open `js/app.js` and start building out the app's functionality
+## For running tests
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+It is recommended to use the console.
+You can change the value of `pairsMade` to 7 or a different number through the console to fake a winning scenario.
 
-## Contributing
+## Acknowledgments
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+Udacity has supplied me with the imagery and base HTML for this homework project.
