@@ -105,32 +105,46 @@ function previewCard(cardSpot) {
 placeCards();
 
 let counter;
-function setTimer(countTime) {
+let totalSeconds;
+let time = {
+    minutes: 0,
+    seconds: 0
+};
 
-  if (countTime) {
+function setTimer(countTime, restartTime) {
+    totalSeconds = 0;
     const minutesLabel = document.getElementById("minutes");
     const secondsLabel = document.getElementById("seconds");
-    let totalSeconds = 0;
-    counter = setInterval(setTime, 1000);
+    if (countTime) {
+        counter = setInterval(setTime, 1000);
 
-    function setTime() {
-        ++totalSeconds;
-        secondsLabel.innerHTML = pad(totalSeconds % 60);
-        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
-    }
-
-    function pad(val) {
-        var valString = val + "";
-        if (valString.length < 2) {
-            return "0" + valString;
-        } else {
-            return valString;
+        function setTime() {
+            ++totalSeconds;
+            time.seconds = pad(totalSeconds % 60);
+            time.minutes = pad(parseInt(totalSeconds / 60));
+            secondsLabel.innerHTML = time.seconds;
+            minutesLabel.innerHTML = time.minutes;
         }
+
+        function pad(val) {
+            var valString = val + "";
+            if (valString.length < 2) {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+    } else {
+        clearInterval(counter); // stop counter
     }
-  }
-  else {
-    clearInterval(counter); // stop counter
-  }
+    if (restartTime) {
+        time = {
+            minutes: "00",
+            seconds: "00"
+        };
+        secondsLabel.innerHTML = time.seconds;
+        minutesLabel.innerHTML = time.minutes;
+    }
 }
 
 
@@ -147,6 +161,7 @@ function setTimer(countTime) {
 
 let deck = document.querySelector(".deck");
 let restartBtn = document.querySelector(".restart");
+let newGameBtn = document.querySelector(".new-game")
 let backBtn = document.querySelector(".backbtn");
 let firstCard = 0;
 let secondCard = 0;
@@ -197,9 +212,8 @@ function showCard(cardSpot) {
             } else if (firstCard === lastPairedFirstCard) {
                 clearTimeout(firstCardTimeout);
             }
-        }
-        else if (movesNum === 0) {
-          setTimer(true);
+        } else if (movesNum === 0) {
+            setTimer(true, false);
         }
         if (!firstCard.classList.contains('show')) {
             firstCard.classList.add('show');
@@ -266,13 +280,37 @@ function showCard(cardSpot) {
             }, 1000)
             pairsMade++;
             if (pairsMade === 8) {
-                setTimer(false);
-                let winScreen = document.createElement('div');
-                winScreen.className = 'winContainer';
-                winScreen.innerHTML = `<div class="win">
-                               <h2> Yay! </h2>
-                               <h1> You win! </h1>
-                               </div>`
+                setTimer(false, false);
+                const winScreen = document.querySelector('.winContainer');
+
+                function setWinStats() {
+                    const roundsTime = document.querySelector('.round-time');
+                    const roundsStars = document.querySelector('.round-stars');
+                    const roundsBless = document.querySelector('.round-blssng');
+                    switch (starNum) {
+                        case 3:
+                            roundsStars.textContent = ' three stars.';
+                            roundsBless.textContent = 'What a pro. Bravo!';
+                            break;
+                        case 2:
+                            roundsStars.textContent = ' two stars.';
+                            roundsBless.textContent = 'Nice job';
+                            break;
+                        case 1:
+                            roundsStars.textContent = " one star.";
+                            roundsBless.textContent = "I'm sure you can do better than that.";
+                            break;
+                    }
+                    let roundsTimeText;
+                    if (parseFloat(time.minutes) === 0) {
+                        roundsTimeText = ` ${parseFloat(time.seconds)} seconds`
+                    } else {
+                        roundsTimeText = ` ${time.minutes} minutes and ${time.seconds} seconds`
+                    }
+                    roundsTime.textContent = roundsTimeText;
+                }
+                setWinStats();
+                winScreen.classList.add('show-win');
                 setTimeout(function() {
                     document.querySelector('.deck').appendChild(winScreen)
                 }, 420);
@@ -306,10 +344,12 @@ function showCard(cardSpot) {
 }
 
 function restartCards() {
-    if (document.querySelector('.winContainer')) {
-        document.querySelector('.winContainer').outerHTML = ' '
+    let winContainer = document.querySelector('.winContainer');
+    if (winContainer.classList.contains('show-win')) {
+        winContainer.classList.remove('show-win');
     }
     setListeners(false);
+    setTimer(false, true);
     cardPairs = [];
     pairsMade = 0;
     pairNum = 0;
@@ -358,6 +398,9 @@ function setListeners(finishedPreview) {
             //send clicked card spot to showCard
         }
         restartBtn.onclick = function(event) {
+            restartCards();
+        }
+        newGameBtn.onclick = function(event) {
             restartCards();
         }
         backBtn.onclick = function(event) {

@@ -89,18 +89,32 @@ html {
      padding-right: 17px;
      cursor: pointer;
 }
+.new-game {
+     cursor: pointer;
+}
  .winContainer {
+     box-shadow: 12px 15px 20px 0 rgba(46, 61, 73, 0.17);
      position: absolute;
-     top: 46%;
+     text-align: left;
+     display: none;
+     top: 48%;
      left: 50%;
-     transform: translate(-50%, -46%);
+     transform: translate(-50%, -51%);
      color: grey;
-     background-color: white;
-     padding-left: 30px;
-     padding-right: 90px;
+     background-color: #fffefd;
+     padding-left: 34px;
+     padding-right: 139px;
      padding-top: 30px;
      border-radius: 10px;
      padding-bottom: 20px;
+}
+.round-blssng {
+     color: #002c6da6;
+     font-size: 13px;
+     font-weight: bold;
+}
+.winContainer.show-win {
+     display: block;
 }
  .back > i {
      font-size: 38px;
@@ -181,5 +195,5 @@ html {
      -webkit-text-stroke-color: black;
 }
 .timer {
-  margin-left: 6px;
+     margin-left: 6px;
 }
